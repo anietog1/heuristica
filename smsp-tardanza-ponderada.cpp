@@ -1,7 +1,7 @@
 #include <bits/stdc++.h>
 
 using namespace std;
-#define MAXN 100
+#define MAXN 600
 #define d(x) cout << #x << " = " << x << endl
 // puedo llegar hasta O(n3) maxn sería ~~500
 // aunque si n fuera 100000, solo podría O(nlogn)
