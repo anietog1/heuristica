@@ -25,7 +25,8 @@ bool comp(proc a, proc b) {
   // ya que la duración da igual
   // Todas las actividades de peso W se deberán considerar como una sola de peso W y así,
   // se deben priorizar las actividades de mayor peso
-  return a.w > b.w;
+  if(a.w > b.w) return true;
+  return a.p < b.p;
 }
 
 int calc_t() {
