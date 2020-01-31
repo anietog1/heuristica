@@ -44,9 +44,14 @@ int calc_t() {
 
 int main(int argc, char** argv, char** env) {
   cin >> n;
+
   for(int i = 0; i < n; ++i) {
     procs[i].id = i;
-    cin >> procs[i].p >> procs[i].w;
+    cin >> procs[i].p;
+  }
+
+  for(int i = 0; i < n; ++i) {
+    cin >> procs[i].w;
   }
 
   sort(procs, procs + n, comp);
@@ -54,6 +59,7 @@ int main(int argc, char** argv, char** env) {
   int ans = calc_t();
 
   cout << "id p w t tp" << endl;
+
   for(int i = 0; i < n; ++i) {
     cout << procs[i].id << " "
          << procs[i].p << " "
@@ -62,5 +68,6 @@ int main(int argc, char** argv, char** env) {
          << procs[i].tp << " "
          << endl;
   }
+
   cout << endl << "Flujo total: " << ans << endl;
 }

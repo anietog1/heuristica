@@ -1,0 +1,24 @@
+n: 5
+Orden: 3 1 2 5 4
+T: 232
+
+n: 7
+Orden: 6 3 1 2 7 5 4
+T: 
+
+...
+
+Cómo trabajo con arreglos dentro del execute?!
+
+5 => < 1s
+7 => < 1s
+10 => ~~6s
+12 > 1min
+...
+
+Nota: Después de 12 empezó a tomar mucho tiempo, más de 2 min
+
+Al cambiar a flujo se volvió más rápido?? No significativamente, al parecer. Se tostó con 12 :D
+
+Mis soluciones factibles:
+

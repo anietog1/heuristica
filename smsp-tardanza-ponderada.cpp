@@ -34,29 +34,6 @@ int calc_t() {
   return res;
 }
 
-// void solve_fixed_point() {
-//   int min_t = (1 << 30), curr_t = (1 << 30 - 1);
-//   proc min_ans[n], curr_ans[n];
-
-//   while(curr_t < min_t) {
-//     min_t = curr_t;
-//     for(int i = 0; i < n; ++i) min_ans[i] = curr_ans[i];
-
-//     for(int i = 0; i < n; ++i) {
-//       for(int j = 0; j < n; ++j) {
-//         swap(curr_ans[i], curr_ans[j]);
-//         int temp_t = calc_t();
-
-//         if(temp_t < curr_t) {
-//           swap(curr_ans[i], curr_ans[j]);
-//         } else {
-//           swap(curr_ans[i], curr_ans[j]);
-//         }
-//       }
-//     }
-//   }
-// }
-
 void solven3() {
   sort(procs, procs + n, comp_risk_first);
 
@@ -80,15 +57,26 @@ void solven3() {
 
 int main(int argc, char** argv, char** env) {
   cin >> n;
+
   for(int i = 0; i < n; ++i) {
     procs[i].id = i;
-    cin >> procs[i].p >> procs[i].d >> procs[i].w;
+    cin >> procs[i].p;
+  }
+
+  for(int i = 0; i < n; ++i) {
+    cin >> procs[i].d;
+  }
+
+  for(int i = 0; i < n; ++i) {
+    cin >> procs[i].w;
   }
 
   solven3();
 
   int ans = calc_t();
+
   cout << "id p d w t tp" << endl;
+
   for(int i = 0; i < n; ++i) {
     cout << procs[i].id << " "
          << procs[i].p << " "
@@ -98,5 +86,6 @@ int main(int argc, char** argv, char** env) {
          << procs[i].tp << " "
          << endl;
   }
+
   cout << endl << "Tardanza ponderada total: " << ans << endl;
 }
