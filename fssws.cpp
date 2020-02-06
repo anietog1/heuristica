@@ -31,6 +31,21 @@ int main() {
   cin >> n >> m;
   fore(j, 1, n) fore(k, 1, m) cin >> p[j][k];
   fore(j, 0, n) order[j] = j;
-  do cout << calcZ() << endl;
-  while(next_permutation(order + 1, order + n + 1));
+
+  int bestZ = INF;
+  int bestOrder[n] = {};
+
+  do {
+    int tmpZ = calcZ();
+
+    if(tmpZ < bestZ) {
+      bestZ = tmpZ;
+      memcpy(bestOrder, order + 1, n * sizeof(int));
+    }
+  } while(next_permutation(order + 1, order + n + 1));
+
+  cout << "min Z = " << bestZ << endl;
+  cout << "order:";
+  forn(i, n) cout << " " << bestOrder[i];
+  cout << endl;
 }
