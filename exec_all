@@ -9,8 +9,8 @@ exec_for() {
 }
 
 for i in $(seq 1 4 120); do
-    exec_for $i &
-    exec_for $(($i+1)) &
-    exec_for $(($i+2)) &
-    exec_for $(($i+3))
+    (exec_for $i) &
+    (exec_for $(($i+1))) &
+    (exec_for $(($i+2))) &
+    (exec_for $(($i+3)))
 done
