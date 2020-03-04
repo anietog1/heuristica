@@ -1,0 +1,16 @@
+#! /usr/bin/env bash
+
+command=$1
+
+exec_for() {
+    echo "$1..."
+    "./$command" < "./samples/FSSPSC_$i.txt" > "./samples/FSSPSC_$i.sol" 2> "./samples/FSSPSC_$i.data"
+    echo "$1 done!"
+}
+
+for i in $(seq 1 4 120); do
+    exec_for $i &
+    exec_for $(($i+1)) &
+    exec_for $(($i+2)) &
+    exec_for $(($i+3))
+done

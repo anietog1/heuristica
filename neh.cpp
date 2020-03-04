@@ -9,10 +9,10 @@ int n, m, L;
 int p[MAXN][MAXN];
 int t[MAXN][MAXN];
 
-int calcz(vector<int> const& jobs) {
+int calcz(list<int> const& jobs) {
   int curr, prev = -1;
-  for(int j = 0; j < jobs.size(); ++j) {
-    curr = jobs[j];
+  for(auto j = jobs.begin(); j != jobs.end(); ++j) {
+    curr = *j;
 
     for(int k = 0; k < m; ++k) {
       int _t = 0, _p = p[curr][k];
@@ -39,54 +39,86 @@ int calcz(vector<int> const& jobs) {
   return t[curr][m - 1];
 }
 
-int neh() {
-  vector<int> chosen, available;
+int lb() {
+  int maxsum = 0;
+
+  for(int k = 0; k < m; ++k) {
+    int sum = 0;
+
+    for(int j = 0; j < n; ++j) {
+      sum += p[j][k];
+    }
+
+    maxsum = max(maxsum, sum);
+  }
+
+  return maxsum;
+}
+
+void neh() {
+  auto begin = chrono::steady_clock::now();
+
+  list<int> chosen, available;
 
   for(int i = 0; i < n; ++i) {
     available.push_back(i);
   }
 
   while(available.size() != 0) {
-    int minz = (1 << 30), minj, index;
+    int minz = (1 << 30);
+    auto minj = available.begin(), index = chosen.end();
 
-    for(int i = 0; i <= chosen.size(); ++i) {
-      for(int j = 0; j < available.size(); ++j) {
-        vector<int> temp(chosen.begin(), chosen.begin() + i);
-        temp.push_back(available[j]);
-        temp.insert(temp.end(), chosen.begin() + i, chosen.end());
+    bool last = false;
+    for(auto i = chosen.begin(); !last; ++i) {
+      for(auto j = available.begin(); j != available.end(); ++j) {
+        chosen.insert(i, *j);
 
-        int tempz = calcz(temp);
+        int tempz = calcz(chosen);
+
         if(tempz < minz) {
           minz = tempz;
           minj = j;
           index = i;
         }
+
+        chosen.erase(prev(i));
+      }
+
+      if(i == chosen.end()) {
+        last = true;
       }
     }
 
-    chosen.insert(chosen.begin() + index, available[minj]);
-    available.erase(available.begin() + minj);
+    chosen.insert(index, *minj);
+    available.erase(minj);
   }
 
   int z = calcz(chosen);
 
+  auto end = chrono::steady_clock::now();
+
   for(int k = 0; k < m; ++k) {
-    for(int j = 0; j < n; ++j) {
-      if(j != 0) {
+    bool first = true;
+    for(auto j : chosen) {
+      if(first) {
+        first = false;
+      } else {
         cout << " ";
       }
 
-      cout << chosen[j] + 1 << " " << t[chosen[j]][k];
+      cout << j + 1 << " " << t[j][k];
     }
 
     cout << endl;
   }
 
-  return z;
+  int _lb = lb();
+  cerr << chrono::duration_cast<chrono::microseconds>(end - begin).count()
+       << " " << chrono::duration_cast<chrono::milliseconds>(end - begin).count() << endl;
+  cerr << z << " " << _lb << " " << double(z - _lb) / _lb << endl;
 }
 
 int main() {
-  auto begin = chrono::steady_clock::now();
   cin >> n >> m >> L;
 
   for(int j = 0; j < n; ++j) {
@@ -95,12 +127,5 @@ int main() {
     }
   }
 
-  cerr << neh() << endl;
-
-  auto end = chrono::steady_clock::now();
-  cerr << "Time elapsed = "
-       << chrono::duration_cast<chrono::microseconds>(end - begin).count()
-       << "[μs] = "
-       << chrono::duration_cast<chrono::milliseconds>(end - begin).count()
-       << "[ms]" << endl;
+  neh();
 }

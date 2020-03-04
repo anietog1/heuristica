@@ -39,7 +39,26 @@ int calcz(vector<int> const& jobs) {
   return t[curr][m - 1];
 }
 
+int lb() {
+  int maxsum = 0;
+
+  for(int k = 0; k < m; ++k) {
+    int sum = 0;
+
+    for(int j = 0; j < n; ++j) {
+      sum += p[j][k];
+    }
+
+    maxsum = max(maxsum, sum);
+  }
+
+  return maxsum;
+}
+
+
 void graph() {
+  auto begin = chrono::steady_clock::now();
+
   int g[n][n] = {};
   for(int i = 0; i < n; ++i) {
     for(int j = 0; j < n; ++j) {
@@ -80,6 +99,8 @@ void graph() {
 
   int z = calcz(order);
 
+  auto end = chrono::steady_clock::now();
+
   for(int k = 0; k < m; ++k) {
     for(int j = 0; j < n; ++j) {
       if(j != 0) {
@@ -92,11 +113,13 @@ void graph() {
     cout << endl;
   }
 
-  d(z);
+  int _lb = lb();
+  cerr << chrono::duration_cast<chrono::microseconds>(end - begin).count()
+       << " " << chrono::duration_cast<chrono::milliseconds>(end - begin).count() << endl;
+  cerr << z << " " << _lb << " " << double(z - _lb) / _lb << endl;
 }
 
 int main() {
-  auto begin = chrono::steady_clock::now();
   cin >> n >> m >> L;
 
   for(int j = 0; j < n; ++j) {
@@ -106,11 +129,4 @@ int main() {
   }
 
   graph();
-
-  auto end = chrono::steady_clock::now();
-  cerr << "Time elapsed = "
-       << chrono::duration_cast<chrono::microseconds>(end - begin).count()
-       << "[μs] = "
-       << chrono::duration_cast<chrono::milliseconds>(end - begin).count()
-       << "[ms]" << endl;
 }
