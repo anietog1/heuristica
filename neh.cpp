@@ -36,7 +36,7 @@ int calcz(list<int> const& jobs) {
     prev = curr;
   }
 
-  return t[curr][m - 1];
+  return t[curr][m - 1] + p[curr][m - 1];
 }
 
 int lb() {
