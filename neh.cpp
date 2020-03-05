@@ -64,33 +64,40 @@ void neh() {
     available.push_back(i);
   }
 
+  int duration[n] = {};
+  for(int i = 0; i < n; ++i) {
+    duration[i] = calcz({i});
+  }
+
+  available.sort([&duration](int j1, int j2) {
+                   return duration[j1] < duration[j2];
+                 });
+
   while(available.size() != 0) {
+    int j = available.front();
+    available.pop_front();
+
     int minz = (1 << 30);
-    auto minj = available.begin(), index = chosen.end();
+    auto mini = chosen.end();
 
     bool last = false;
     for(auto i = chosen.begin(); !last; ++i) {
-      for(auto j = available.begin(); j != available.end(); ++j) {
-        chosen.insert(i, *j);
+      chosen.insert(i, j);
+      int tempz = calcz(chosen);
 
-        int tempz = calcz(chosen);
-
-        if(tempz < minz) {
-          minz = tempz;
-          minj = j;
-          index = i;
-        }
-
-        chosen.erase(prev(i));
+      if(tempz < minz) {
+        minz = tempz;
+        mini = i;
       }
+
+      chosen.erase(prev(i));
 
       if(i == chosen.end()) {
         last = true;
       }
     }
 
-    chosen.insert(index, *minj);
-    available.erase(minj);
+    chosen.insert(mini, j);
   }
 
   int z = calcz(chosen);
