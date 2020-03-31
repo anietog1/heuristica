@@ -6,8 +6,11 @@ using namespace std;
 #define MAXN 1000
 
 int n, m, L;
-int p[MAXN][MAXN];
-int t[MAXN][MAXN];
+
+int g[MAXN][MAXN] = {};
+int p[MAXN][MAXN] = {};
+int t[MAXN][MAXN] = {};
+int visited[MAXN] = {};
 
 int calcz(vector<int> const& jobs) {
   int curr, prev = -1;
@@ -55,49 +58,80 @@ int lb() {
   return maxsum;
 }
 
+// if i == -1 => choosefirst
+int chooseNext(int prev) { // proporcion: 4 3 3
+  vector<pair<int, int>> next;
+
+  if(prev == -1) {
+    for(int i = 0; i < n; ++i) {
+      next.push_back(make_pair(g[i][i], i));
+    }
+  } else {
+    for(int i = 0; i < n; ++i) {
+      if(!visited[i]) {
+        next.push_back(make_pair(g[prev][i], i));
+      }
+    }
+  }
+
+  sort(next.begin(), next.end());
+  uniform_real_distribution<> dist(0.0, 1.0); 
+
+  std::random_device rd;
+  std::mt19937 gen(rd());
+  double value = dist(gen);
+
+  int answer = next[0].second;
+
+  if(value > 0.5 && next.size() >= 2) {
+    answer = next[1].second;
+  }
+
+  if(value > 0.8 && next.size() >= 3) {
+    answer = next[2].second;
+  }
+
+  return answer;
+}
 
 void graph() {
   auto begin = chrono::steady_clock::now();
 
-  int g[n][n] = {};
-  for(int i = 0; i < n; ++i) {
-    for(int j = 0; j < n; ++j) {
-      g[i][j] = calcz({i, j});
-    }
-  }
+  int tries = 100;
+  int globalminz = (1 << 30);
+  vector<int> globalminorder;
 
-  vector<int> order;
-  bool visited[n] = {};
-
-  int minz = (1 << 30), mini;
-  for(int i = 0; i < n; ++i) {
-    int tempz = calcz({i});
-
-    if(tempz < minz) {
-      minz = tempz;
-      mini = i;
-    }
-  }
-
-  order.push_back(mini);
-  visited[mini] = true;
-
-  while(order.size() != n) {
-    int prev = order[order.size() - 1];
-    minz = (1 << 30);
-
+  while(tries--) {
     for(int i = 0; i < n; ++i) {
-      if(!visited[i] && g[prev][i] < minz) {
-        minz = g[prev][i];
-        mini = i;
+      for(int j = 0; j < n; ++j) {
+        g[i][j] = calcz({i, j});
       }
     }
 
-    order.push_back(mini);
-    visited[mini] = true;
+    vector<int> order;
+    for(int i = 0; i < n; ++i) visited[i] = false;
+
+    int first = chooseNext(-1);
+    order.push_back(first);
+    visited[first] = true;
+
+    while(order.size() != n) {
+      int prev = order[order.size() - 1];
+      int next = chooseNext(prev);
+      order.push_back(next);
+      visited[next] = true;
+    }
+
+    int localz = calcz(order);
+
+    if(localz < globalminz) {
+      globalminz = localz;
+      globalminorder = order;
+    }
   }
 
-  int z = calcz(order);
+  int z = globalminz;
+  vector<int> order = globalminorder;
 
   auto end = chrono::steady_clock::now();
 
