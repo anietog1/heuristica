@@ -57,50 +57,87 @@ int lb() {
 
 void neh() {
   auto begin = chrono::steady_clock::now();
+  int realp[n][m];
 
-  list<int> chosen, available;
+  uniform_real_distribution<> dist(-0.07, 0.07); 
+  std::random_device rd;
+  std::mt19937 gen(rd());
 
-  for(int i = 0; i < n; ++i) {
-    available.push_back(i);
+  for(int j = 0; j < n; ++j) {
+    for(int k = 0; k < m; ++k) {
+      realp[j][k] = p[j][k];
+    }
   }
 
-  int duration[n] = {};
-  for(int i = 0; i < n; ++i) {
-    duration[i] = calcz({i});
-  }
+  int tries = 30;
+  int globalminz = (1 << 30);
+  list<int> globalminorder;
 
-  available.sort([&duration](int j1, int j2) {
-                   return duration[j1] < duration[j2];
-                 });
-
-  while(available.size() != 0) {
-    int j = available.front();
-    available.pop_front();
-
-    int minz = (1 << 30);
-    auto mini = chosen.end();
-
-    bool last = false;
-    for(auto i = chosen.begin(); !last; ++i) {
-      chosen.insert(i, j);
-      int tempz = calcz(chosen);
-
-      if(tempz < minz) {
-        minz = tempz;
-        mini = i;
-      }
-
-      chosen.erase(prev(i));
-
-      if(i == chosen.end()) {
-        last = true;
+  while(tries--) {
+    for(int j = 0; j < n; ++j) {
+      for(int k = 0; k < m; ++k) {
+        p[j][k] = p[j][k] * (1 + dist(gen));
       }
     }
 
-    chosen.insert(mini, j);
+    list<int> chosen, available;
+
+    for(int i = 0; i < n; ++i) {
+      available.push_back(i);
+    }
+
+    int duration[n] = {};
+    for(int i = 0; i < n; ++i) {
+      duration[i] = calcz({i});
+    }
+
+    available.sort([&duration](int j1, int j2) {
+                    return duration[j1] < duration[j2];
+                  });
+
+    while(available.size() != 0) {
+      int j = available.front();
+      available.pop_front();
+
+      int minz = (1 << 30);
+      auto mini = chosen.end();
+
+      bool last = false;
+      for(auto i = chosen.begin(); !last; ++i) {
+        chosen.insert(i, j);
+        int tempz = calcz(chosen);
+
+        if(tempz < minz) {
+          minz = tempz;
+          mini = i;
+        }
+
+        chosen.erase(prev(i));
+
+        if(i == chosen.end()) {
+          last = true;
+        }
+      }
+
+      chosen.insert(mini, j);
+    }
+
+    for(int j = 0; j < n; ++j) {
+      for(int k = 0; k < m; ++k) {
+        p[j][k] = realp[j][k];
+      }
+    }
+
+    int localz = calcz(chosen);
+
+    if(localz < globalminz) {
+      globalminz = localz;
+      globalminorder = chosen;
+    }
   }
 
-  int z = calcz(chosen);
+  int z = globalminz;
+  list<int> chosen = globalminorder;
 
   auto end = chrono::steady_clock::now();
 
