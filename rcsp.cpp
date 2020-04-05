@@ -48,8 +48,9 @@ void read_problem(problem_t& p) {
   for(auto& vec : p.t) {
     vec.resize(p.m);
   }
+}
 
-  /* graph */
+void build_graph(problem_t& p) {
   p.g.resize(p.n * p.m + 2);
   for(int i = 0; i < p.g.size(); ++i) {
     p.g[i].id = i;
@@ -87,4 +88,5 @@ void read_problem(problem_t& p) {
 int main() {
   problem_t p;
   read_problem(p);
+  build_graph(p);
 }
