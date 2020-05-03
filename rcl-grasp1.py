@@ -2,6 +2,8 @@
 import util
 import random
 
+# método:
+# agregar elementos disponibles aleatoriamente
 def fsolve(n, m, L, p):
     rcl = [(job, 0) for job in range(n)] # (job, machine)
     t = [[] for _ in range(m)]
@@ -26,7 +28,6 @@ def fsolve(n, m, L, p):
 
         finish[job][machine] = start + p[job][machine]
         t[machine].append((job, start))
-        print('trabajo %d en maquina %d inicia en %d y termina en %d' % (job + 1, machine + 1, start, finish[job][machine]))
 
     return t
 
