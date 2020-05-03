@@ -38,7 +38,7 @@ def write_output(t, filename = None):
 
     for machine in t:
         for job, start in machine:
-            f.write('%d\t%d\t' % (job, start))
+            f.write('%d\t%d\t' % (job + 1, start))
         f.write('\n')
 
     if f is not sys.stdout:
