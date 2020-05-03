@@ -27,3 +27,22 @@ def read_input(filename = None):
         f.close()
 
     return n, m, L, p
+
+def write_output(t, filename = None):
+    if filename:
+        f = open(filename, 'w')
+    else:
+        f = sys.stdout
+
+    for machine in t:
+        for job, start in machine:
+            f.write('%d\t%d\t' % (job, start))
+        f.write('\n')
+
+    if f is not sys.stdout:
+        f.close()
+
+def execute(fsolve, input_filename = None, output_filename = None):
+    n, m, L, p = read_input(input_filename)
+    t = fsolve(n, m, L, p)
+    write_output(t, output_filename)
