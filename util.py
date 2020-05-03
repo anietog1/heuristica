@@ -28,6 +28,8 @@ def read_input(filename = None):
 
     return n, m, L, p
 
+# t : [[(int, int)]] machines => jobs => (job, start)
+# filename = None => stdout
 def write_output(t, filename = None):
     if filename:
         f = open(filename, 'w')
@@ -42,6 +44,7 @@ def write_output(t, filename = None):
     if f is not sys.stdout:
         f.close()
 
+# executes the given method, does IO operations
 def execute(fsolve, input_filename = None, output_filename = None):
     n, m, L, p = read_input(input_filename)
     t = fsolve(n, m, L, p)
