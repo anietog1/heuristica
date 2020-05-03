@@ -3,6 +3,9 @@ import util
 
 # debe regresar t[k] = [(job, start)]
 # trabajo j [job] es procesado en el tiempo start en la maquina k
+# método:
+# solo calcular Z, practicamente
+# en el orden en que los dan los trabajos
 def fsolve(n, m, L, p):
     t = [[] for _ in range(m)]
     finish = [[None] * m for _ in range(n)]
