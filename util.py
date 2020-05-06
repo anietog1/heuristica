@@ -100,10 +100,7 @@ def schedule_in_order(rcl, n, m, L, p):
 
 # calcula todos los datos dado el ordenamiento ya en t
 # se ignora por completo el tiempo de inicio en t
-def calc_for(n, m, L, p, t):
-    start = [[None] * m for _ in range(n)]
-    finish = [[None] * m for _ in range(n)]
-
+def update_for(n, m, L, p, t, start, finish):
     for machine in range(m):
         for job_idx in range(n):
             job, _ = t[machine][job_idx]
