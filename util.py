@@ -14,11 +14,24 @@ def lower_bound(n, m, L, p):
 
 # chequea cuando iniciar según la longitud del turno y el t inicial
 # duration <= L
+# resultado >= start
 def start_if(start, duration, L):
     if start // L < (start + duration - 1) // L:
         return (start // L + 1) * L
     else:
         return start
+
+# este es confuso
+# indica cuándo podría finalizar <= finish
+# eso hace que no finalice en finish
+def finish_if(finish, duration, L):
+    start = finish - duration
+    temp_start = start_if(start, duration, L)
+
+    if start != temp_start:
+        return temp_start
+    else:
+        return finish
 
 # returns n, m, L, p. input filename = None
 def read_input(filename = None):
