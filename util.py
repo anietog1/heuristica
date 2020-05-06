@@ -1,6 +1,8 @@
 import sys
 
-# lb = max sum of all jobs on machines
+INF = 999999999
+
+# lb = max(suma de todos los trabajos en 1 máquina)
 def lower_bound(n, m, L, p):
     lb = 0
     for k in range(m):
@@ -9,6 +11,14 @@ def lower_bound(n, m, L, p):
             cur += p[j][k]
         lb = max(lb, cur)
     return lb
+
+# chequea cuando iniciar según la longitud del turno y el t inicial
+# duration <= L
+def start_if(start, duration, L):
+    if start // L < (start + duration - 1) // L:
+        return (start // L + 1) * L
+    else:
+        return start
 
 # returns n, m, L, p. input filename = None
 def read_input(filename = None):
@@ -44,8 +54,20 @@ def write_output(t, filename = None):
     if f is not sys.stdout:
         f.close()
 
-# executes the given method, does IO operations
+# ejecuta el método y hace las operaciones de entrada y salida
 def execute(fsolve, input_filename = None, output_filename = None):
     n, m, L, p = read_input(input_filename)
     t = fsolve(n, m, L, p)
     write_output(t, output_filename)
+
+def debug(n, m, L, p, t, start, finish):
+    print('[DEBUG]')
+    print('n: %d m: %d L: %d' % (n, m, L))
+    print('p:')
+    print(p)
+    print('t:')
+    print(t)
+    print('start:')
+    print(start)
+    print('finish:')
+    print(finish)
