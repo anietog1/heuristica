@@ -9,7 +9,7 @@ import localsearch
 
 # método:
 # agregar elementos disponibles aleatoriamente
-def fsolve(n, m, L, p, T0 = 1000, TF = 1, r = 0.955, LL = 200):
+def fsolve(n, m, L, p, T0 = 1000, TF = 1, r = 0.95, LL = 100):
     bestt = stupid.fsolve(n, m, L, p)
     beststart, bestfinish = util.start_finish_for(n, m, L, p, bestt)
     bestz = util.get_z(n, m, L, p, bestt, beststart, bestfinish)

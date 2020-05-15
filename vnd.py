@@ -16,11 +16,14 @@ def fsolve(n, m, L, p, iters = 1000, swapratio = 0.07, popratio = 0.07):
     beststart, bestfinish = util.start_finish_for(n, m, L, p, bestt)
     bestz = util.get_z(n, m, L, p, bestt, beststart, bestfinish)
 
+    curt, curstart, curfinish = copy.deepcopy((bestt, beststart, bestfinish))
+    curz = bestz
+
     pops = int(n * m * popratio) + 1
     swaps = int(n * m * swapratio) + 1
 
     for _ in range(iters):
-        t, start, finish = copy.deepcopy((bestt, beststart, bestfinish))
+        t, start, finish = copy.deepcopy((curt, curstart, curfinish))
 
         for _ in range(swaps):
             machine = random.randint(0, m - 1)
@@ -33,6 +36,9 @@ def fsolve(n, m, L, p, iters = 1000, swapratio = 0.07, popratio = 0.07):
         if z < bestz:
             bestt, beststart, bestfinish = t, start, finish
             bestz = z
+
+            curt, curstart, curfinish = bestt, beststart, bestfinish
+            curz = bestz
             continue
 
         for _ in range(pops):
@@ -47,6 +53,9 @@ def fsolve(n, m, L, p, iters = 1000, swapratio = 0.07, popratio = 0.07):
         if z < bestz:
             bestt, beststart, bestfinish = t, start, finish
             bestz = z
+
+            curt, curstart, curfinish = bestt, beststart, bestfinish
+            curz = bestz
             continue
 
         job1 = random.randint(0, n - 1)
@@ -58,9 +67,13 @@ def fsolve(n, m, L, p, iters = 1000, swapratio = 0.07, popratio = 0.07):
         if z < bestz:
             bestt, beststart, bestfinish = t, start, finish
             bestz = z
+
+            curt, curstart, curfinish = bestt, beststart, bestfinish
+            curz = bestz
             continue
 
-
+        curt, curstart, curfinish = t, start, finish
+        curz = z
 
     return bestt
 
