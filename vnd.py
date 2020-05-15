@@ -65,4 +65,4 @@ def fsolve(n, m, L, p, iters = 1000, swapratio = 0.07, popratio = 0.07):
     return bestt
 
 if __name__ == '__main__':
-    util.execute(fsolve, 'samples/FSSPSC_1.txt')
+    util.execute(fsolve)
