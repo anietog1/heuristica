@@ -13,11 +13,12 @@ def move_right(n, m, L, p, t, start, finish):
             job, _ = t[machine][job_idx]
             duration = p[job][machine]
 
-            max_finish = util.INF
-
+            max_finish = util.get_z(n, m, L, p, t, start, finish)
             if machine < m - 1:
                 max_finish = util.finish_if(start[job][machine + 1], duration, L)
-                max_start = max_finish - duration
+            max_start = max_finish - duration
+
+            last_job, _ = t[machine][-1]
 
             if job_idx == n - 1:
                 # al ultimo trabajo de cada maquina
@@ -26,7 +27,7 @@ def move_right(n, m, L, p, t, start, finish):
                 start[job][machine] = max_start
                 finish[job][machine] = max_finish
                 t[machine][job_idx] = (job, max_start)
-            elif finish[t[machine][-1]][machine] <= max_start:
+            elif finish[last_job][machine] <= max_start:
                 # reviso si hay espacio entre el ultimo en esta maquina y el siguiente mio
                 t[machine].append((job, max_start))
                 t[machine].pop(job_idx)
@@ -39,7 +40,7 @@ def move_right(n, m, L, p, t, start, finish):
                 if _finish <= max_finish:
                     start[job][machine] = _start
                     finish[job][machine] = _finish
-                    t[machine][job_idx] = _start
+                    t[machine][job_idx] = (job, _start)
                 elif max_finish <= start[next_job][machine]:
                     start[job][machine] = max_start
                     finish[job][machine] = max_finish
@@ -88,16 +89,17 @@ def move_left(n, m, L, p, t, start, finish):
                 continue
 
             min_start = 0
-
             if machine > 0:
                 min_start = util.start_if(finish[job][machine - 1], duration, L)
-                min_finish = min_start + duration
+            min_finish = min_start + duration
+
+            first_job, _ = t[machine][0]
 
             if job_idx == 0:
                 start[job][machine] = min_start
                 finish[job][machine] = min_finish
                 t[machine][job_idx] = (job, min_start)
-            elif start[t[machine][0]][machine] >= min_finish:
+            elif start[first_job][machine] >= min_finish:
                 start[job][machine] = min_start
                 finish[job][machine] = min_finish
                 t[machine].pop(job_idx)
