@@ -2,7 +2,7 @@
 
 import util, random, copy, constructivos, rw
 
-def fsolve(n, m, L, p, iters=1000, swapratio=0.1, popratio=0.1, wastelimit=10):
+def fsolve(n, m, L, p, iters=100, swapratio=0.1, popratio=0.1):
     rcl = constructivos.neh(n, m, L, p)
 
     bestt = util.t_from(n, m, rcl)
