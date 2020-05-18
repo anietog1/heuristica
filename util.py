@@ -14,34 +14,8 @@ def start_with_shift(start, duration, L):
         return start
 
 def schedule_from_rcl(n, m, L, p, rcl):
-    t = [[] for _ in range(m)]
-    start = [[None] * m for _ in range(n)]
-    finish = [[None] * m for _ in range(n)]
-
-    machines = [0] * n
-
-    for job in rcl:
-        machine = machines[job]
-        machines[job] += 1
-
-        duration = p[job][machine]
-
-        _start = 0
-
-        if len(t[machine]) > 0:
-            prev_job = t[machine][-1]
-            _start = max(_start, finish[prev_job][machine])
-
-        if machine > 0:
-            _start = max(_start, finish[job][machine - 1])
-
-        _start = start_with_shift(_start, duration, L)
-
-        start[job][machine] = _start
-        finish[job][machine] = _start + duration
-        t[machine].append(job)
-
-    return t, start, finish
+    t = t_from(n, m, rcl)
+    return t, schedule_from_t(n, m, L, p, t)
 
 def schedule_from_t(n, m, L, p, t):
     start = [[None] * m for _ in range(n)]
