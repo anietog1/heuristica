@@ -3,6 +3,10 @@ Repositorio para el curso de heurística :D
 
 ## Rama: búsqueda local
 
+Para la compilación de neh recomiendo el siguiente comando:
+
+    $ make CXXFLAGS=-O2 -B neh
+
 Los métodos funcionan ambos igual:
 
     $ ./execall vnd.py
