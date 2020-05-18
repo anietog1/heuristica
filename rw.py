@@ -1,4 +1,4 @@
-import sys
+import sys, time, util
 
 def read_input(filename=None):
     if filename:
@@ -32,8 +32,20 @@ def write_output(n, m, t, start, filename=None):
     if f is not sys.stdout:
         f.close()
 
-# ejecuta el método y hace las operaciones de entrada y salida
+def eprint(*args, **kwargs):
+    print(*args, file=sys.stderr, **kwargs)
+
 def execute(fsolve, input_filename=None, output_filename=None):
     n, m, L, p = read_input(input_filename)
-    t, start, _ = fsolve(n, m, L, p)
+    begining = time.time()
+    t, start, finish = fsolve(n, m, L, p)
+    end = time.time()
     write_output(n, m, t, start, output_filename)
+
+    secs = end - begining
+    micros = int(secs * 1000000)
+    millis = int(secs * 1000)
+    z = util.get_z(n, m, t, finish)
+    lb = util.lower_bound(n, m, L, p)
+    dist = (z - lb) / z
+    eprint('%d %d %d %d %f' % (micros, millis, z, lb, dist))
