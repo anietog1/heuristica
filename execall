@@ -8,9 +8,6 @@ exec_for() {
     echo "$1 done!"
 }
 
-for i in $(seq 1 4 117); do
-    ( exec_for $i ) &
-    ( exec_for $(($i+1)) ) &
-    ( exec_for $(($i+2)) ) &
-    ( exec_for $(($i+3)) )
+for i in $(seq 1 1 120); do
+    ( exec_for $i )
 done
