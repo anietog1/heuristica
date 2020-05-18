@@ -48,4 +48,4 @@ def execute(fsolve, input_filename=None, output_filename=None):
     z = util.get_z(n, m, t, finish)
     lb = util.lower_bound(n, m, L, p)
     dist = (z - lb) / z
-    eprint('%d %d %d %d %f' % (micros, millis, z, lb, dist))
+    eprint('%d %d\n%d %d %f' % (micros, millis, z, lb, dist))
