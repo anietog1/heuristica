@@ -1,3 +1,5 @@
+INF = (1 << 30)
+
 def lower_bound(n, m, L, p):
     lb = 0
     for k in range(m):
