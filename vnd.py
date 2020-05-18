@@ -1,81 +1,76 @@
 #! /usr/bin/python3
-import util
-import random
-import stupid
-import math
-import random
-import localsearch
-import copy
 
-# método:
-# ejecuto n swaps
-# o hago pop a n tareas y luego hago append
-# o intercambio completamente las posiciones de dos tareas
-def fsolve(n, m, L, p, iters = 1000, swapratio = 0.07, popratio = 0.07):
-    bestt = stupid.fsolve(n, m, L, p)
-    beststart, bestfinish = util.start_finish_for(n, m, L, p, bestt)
-    bestz = util.get_z(n, m, L, p, bestt, beststart, bestfinish)
+import util, random, copy, constructivos, rw
 
-    curt, curstart, curfinish = copy.deepcopy((bestt, beststart, bestfinish))
+def fsolve(n, m, L, p, iters=1000, swapratio=0.1, popratio=0.1, wastelimit=10):
+    rcl = constructivos.neh(n, m, L, p)
+
+    bestt = util.t_from(n, m, rcl)
+    beststart, bestfinish = util.schedule_from_t(n, m, L, p, bestt)
+    bestz = util.get_z(n, m, bestt, bestfinish)
+
+    curt = copy.deepcopy(bestt)
     curz = bestz
 
     pops = int(n * m * popratio) + 1
     swaps = int(n * m * swapratio) + 1
 
     for _ in range(iters):
-        t, start, finish = copy.deepcopy((curt, curstart, curfinish))
+        t = copy.deepcopy(curt)
 
         for _ in range(swaps):
             machine = random.randint(0, m - 1)
             job1 = random.randint(0, n - 1)
             job2 = random.randint(0, n - 1)
-            localsearch.swap_in_machine(machine, job1, job2, n, m, L, p, t, start, finish)
+            t[machine][job1], t[machine][job2] = t[machine][job2], t[machine][job1]
 
-        z = util.get_z(n, m, L, p, t, start, finish)
-
-        if z < bestz:
-            bestt, beststart, bestfinish = t, start, finish
-            bestz = z
-
-            curt, curstart, curfinish = bestt, beststart, bestfinish
-            curz = bestz
-            continue
-
-        for _ in range(pops):
-            machine = random.randint(0, m - 1)
-            job_idx = random.randint(0, n - 1)
-            job, _ = t[machine].pop(job_idx)
-            t[machine].append((job, -1))
-
-        util.update_for(n, m, L, p, t, start, finish)
-        z = util.get_z(n, m, L, p, t, start, finish)
+        start, finish = util.schedule_from_t(n, m, L, p, t)
+        z = util.get_z(n, m, t, finish)
 
         if z < bestz:
-            bestt, beststart, bestfinish = t, start, finish
-            bestz = z
-
-            curt, curstart, curfinish = bestt, beststart, bestfinish
+            bestt, beststart, bestfinish, bestz = t, start, finish, z
+            curt = copy.deepcopy(bestt)
             curz = bestz
-            continue
+        else:
+            t = copy.deepcopy(curt)
 
-        job1 = random.randint(0, n - 1)
-        job2 = random.randint(0, n - 1)
-        localsearch.swap_jobs(job1, job2, n, m, L, p, t, start, finish)
+            for _ in range(pops):
+                machine = random.randint(0, m - 1)
+                job_idx = random.randint(0, n - 2)
+                job = t[machine].pop(job_idx)
+                t[machine].append(job)
 
-        z = util.get_z(n, m, L, p, t, start, finish)
+            start, finish = util.schedule_from_t(n, m, L, p, t)
+            z = util.get_z(n, m, t, finish)
 
-        if z < bestz:
-            bestt, beststart, bestfinish = t, start, finish
-            bestz = z
+            if z < bestz:
+                bestt, beststart, bestfinish, bestz = t, start, finish, z
+                curt = copy.deepcopy(bestt)
+                curz = bestz
+            else:
+                job1 = random.randint(0, n - 1)
+                job2 = random.randint(0, n - 1)
 
-            curt, curstart, curfinish = bestt, beststart, bestfinish
-            curz = bestz
-            continue
+                for machine in range(m):
+                    for j in range(n):
+                        if t[machine][j] == job1:
+                            job1_idx = j
+                        if t[machine][j] == job2:
+                            job2_idx = j
+                    t[machine][job1_idx], t[machine][job2_idx] = t[machine][job2_idx], t[machine][job1_idx]
 
-        curt, curstart, curfinish = t, start, finish
-        curz = z
+                start, finish = util.schedule_from_t(n, m, L, p, t)
+                z = util.get_z(n, m, t, finish)
 
-    return bestt
+                if z < bestz:
+                    bestt, beststart, bestfinish, bestz = t, start, finish, z
+                    curt = copy.deepcopy(bestt)
+                    curz = bestz
+                else:
+                    curt = t
+                    curz = z
+
+    return bestt, beststart, bestfinish
 
 if __name__ == '__main__':
-    util.execute(fsolve)
+    rw.execute(fsolve)
