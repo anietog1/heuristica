@@ -3,7 +3,11 @@ Repositorio para el curso de heurística :D
 
 ## Rama: búsqueda local
 
-Los métodos recocido y vnd funcionan ambos igual:
+Los métodos funcionan ambos igual:
 
-    $ ./execall recocido.py
-    $ ./recocido.py < inputFile > outputFile
+    $ ./execall vnd.py
+    $ ./vnd.py < inputFile > outputFile
+
+Eso crea los archivos output en samples/
+
+Lar carpetas samples_neh_... y samples_vnd_... contienen los archivos para evitar la necesidad e ejecutar los programas.
