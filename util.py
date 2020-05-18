@@ -17,7 +17,8 @@ def start_with_shift(start, duration, L):
 
 def schedule_from_rcl(n, m, L, p, rcl):
     t = t_from(n, m, rcl)
-    return t, schedule_from_t(n, m, L, p, t)
+    start, finish = schedule_from_t(n, m, L, p, t)
+    return t, start, finish
 
 def schedule_from_t(n, m, L, p, t):
     start = [[None] * m for _ in range(n)]
