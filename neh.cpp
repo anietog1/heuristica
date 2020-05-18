@@ -56,7 +56,7 @@ int lb() {
   return maxsum;
 }
 
-void neh(int tries, int tofail) {
+void neh(int tries, int tofail, double T0, double TF, double r) {
   auto begin = chrono::steady_clock::now();
 
   list<int> chosen, available;
@@ -106,28 +106,46 @@ void neh(int tries, int tofail) {
 
   random_device rd;
   mt19937 gen(rd());
-  uniform_int_distribution<> dis(0, n - 1);
+  uniform_int_distribution<> dis(0, n - 2);
+  uniform_real_distribution<> disf(0.0, 1.0);
 
-  for(int i = 0; i < tries; ++i) {
-    list<int> tmpchosen;
+  list<int> curchosen = chosen;
+  int curz = z;
 
-    int cnt = 0;
-    do {
-      tmpchosen = chosen;
-      int idx1 = dis(gen), idx2 = dis(gen);
-      auto it1 = tmpchosen.begin(), it2 = tmpchosen.begin();
-      advance(it1, idx1);
-      advance(it2, idx2);
-      swap(*it1, *it2);
-    } while(cnt++ < tofail && visited[tmpchosen]);
+  double T = T0;
+  while(T > TF) {
+    for(int i = 0; i < tries; ++i) {
+      list<int> tmpchosen;
 
-    visited[tmpchosen] = true;
-    int tmpz = calcz(tmpchosen);
+      int cnt = 0;
+      do {
+        tmpchosen = chosen;
+        int idx1 = dis(gen);
+        //int idx2 = idx1 + 1;
+        int idx2 = dis(gen);
+        auto it1 = tmpchosen.begin(), it2 = tmpchosen.begin();
+        advance(it1, idx1);
+        advance(it2, idx2);
+        swap(*it1, *it2);
+      } while(cnt++ < tofail && visited[tmpchosen]);
 
-    if(tmpz < z) {
-      chosen = tmpchosen;
-      z = tmpz;
+      visited[tmpchosen] = true;
+      int tmpz = calcz(tmpchosen);
+
+      int d = tmpz - z;
+
+      if(d < 0 || disf(gen) < exp(-d / T)) {
+        curchosen = tmpchosen;
+        curz = tmpz;
+
+        if(tmpz < z) {
+          chosen = tmpchosen;
+          z = tmpz;
+        }
+      }
     }
+
+    T *= r;
   }
 
   calcz(chosen);
@@ -164,5 +182,5 @@ int main() {
     }
   }
 
-  neh(1000, 20);
+  neh(1000, 20, 1000, 1, 0.95);
 }
