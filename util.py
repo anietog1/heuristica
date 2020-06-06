@@ -17,6 +17,15 @@ def start_with_shift(start, duration, L):
     else:
         return start
 
+def finish_on_shift(finish, duration, L):
+    _start = finish - duration
+    temp_start = start_with_shift(_start, duration, L)
+
+    if _start != temp_start:
+        return temp_start
+    else:
+        return finish
+
 def schedule_from_rcl(n, m, L, p, rcl):
     t = t_from(n, m, rcl)
     start, finish = schedule_from_t(n, m, L, p, t)
