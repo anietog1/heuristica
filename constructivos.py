@@ -24,8 +24,7 @@ def neh(n, m, L, p):
             chosen.pop(i)
         chosen.insert(mini, j)
 
-    rcl = [chosen[i] for _ in range(m) for i in range(n)]
-    return rcl
+    return util.rcl_from_ordering(n, m, chosen)
 
 def calc_z(n, m, L, p, chosen):
     t = [[] for _ in range(m)]

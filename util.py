@@ -155,4 +155,6 @@ def normalized_rcl(n, m, rcl):
     t = t_from(n, m, rcl)
     return rcl_from(n, m, t)
 
-def rcl_from_ordering():
+def rcl_from_ordering(n, m, order):
+    rcl = [order[i] for _ in range(m) for i in range(n)]
+    return rcl
