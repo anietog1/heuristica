@@ -1,0 +1,51 @@
+import sys, time, util
+
+def read_input(filename=None):
+    if filename:
+        f = open(filename)
+    else:
+        f = sys.stdin
+
+    n, m, L = [int(x) for x in f.readline().split('\t')]
+
+    p = [None] * n
+    for j in range(n):
+        p[j] = [int(x) for x in f.readline().split('\t')[:-1]]
+
+    if f is not sys.stdin:
+        f.close()
+
+    return n, m, L, p
+
+def write_output(n, m, t, start, filename=None):
+    if filename:
+        f = open(filename, 'w')
+    else:
+        f = sys.stdout
+
+    for machine_idx in range(m):
+        for job_idx in range(n):
+            job = t[machine_idx][job_idx]
+            f.write('%d\t%d\t' % (job, start[job][machine_idx]))
+        f.write('\n')
+
+    if f is not sys.stdout:
+        f.close()
+
+def eprint(*args, **kwargs):
+    print(*args, file=sys.stderr, **kwargs)
+
+def execute(fsolve, input_filename=None, output_filename=None):
+    n, m, L, p = read_input(input_filename)
+    begining = time.time()
+    t, start, finish = fsolve(n, m, L, p)
+    end = time.time()
+    write_output(n, m, t, start, output_filename)
+
+    secs = end - begining
+    micros = int(secs * 1000000)
+    millis = int(secs * 1000)
+    z = util.get_z(n, m, t, finish)
+    lb = util.lower_bound(n, m, L, p)
+    dist = (z - lb) / lb
+    eprint('%d %d\n%d %d %f' % (micros, millis, z, lb, dist))
