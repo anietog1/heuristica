@@ -1,5 +1,7 @@
 #! /usr/bin/env bash
 
+export PYTHONPATH=$PYTHONPATH:../lib
+
 command=$1
 
 exec_for() {
