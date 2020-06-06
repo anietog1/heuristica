@@ -2,7 +2,7 @@
 
 import util, random, copy, constructivos, rw
 
-def fsolve(n, m, L, p, iters=300, swapratio=0.1):
+def fsolve(n, m, L, p, iters=100, swapratio=0.1):
     rcl = constructivos.neh(n, m, L, p)
 
     bestt = util.t_from(n, m, rcl)
@@ -34,6 +34,7 @@ def fsolve(n, m, L, p, iters=300, swapratio=0.1):
                 machine = random.randint(0, m - 1)
                 job1 = random.randint(0, n - 2)
                 job2 = random.randint(0, n - 2)
+                while job1 == job2: job2 = random.randint(0, n - 2)
                 t[machine][job1], t[machine][job2] = t[machine][job2], t[machine][job1]
 
             t, start, finish = util.optimal_schedule_from_t(n, m, L, p, t)
