@@ -5,8 +5,12 @@ Repositorio para el curso de heurística :D
 
 Los métodos funcionan igual:
 
-    $ ./execall vnd.py
-    $ ./vnd.py < inputFile > outputFile
+    $ export PYTHONPATH=$PYTHONPATH:/path/to/lib # poner aqui el path a la carpeta lib
+    $ ./metodo.py < inputFile > outputFile
+
+O simplemente ejecutar:
+
+    $ ./execall metodo.py
 
 Eso crea los archivos output en samples/
 
