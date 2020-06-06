@@ -45,6 +45,52 @@ def schedule_from_t(n, m, L, p, t):
 
     return start, finish
 
+def optimal_schedule_from_rcl(n, m, L, p, rcl):
+    t = [[] for _ in range(m)]
+    start = [[None] * m for _ in range(n)]
+    finish = [[None] * m for _ in range(n)]
+
+    machines = [0] * n
+    for job in rcl:
+        machine = machines[job]
+
+        min_start = 0
+        duration = p[job][machine]
+
+        if machine > 0:
+            min_start = max(min_start, start_with_shift(finish[job][machine - 1], duration, L))
+
+        n_jobs = len(t[machine])
+        for job_idx in range(0, n_jobs + 1):
+            max_finish = None
+
+            if job_idx > 0:
+                left_job = t[machine][job_idx - 1]
+                left_finish = finish[left_job][machine]
+
+                if min_start < left_finish:
+                    min_start = start_with_shift(left_finish, duration, L)
+
+            if job_idx < n_jobs:
+                right_job = t[machine][job_idx]
+                right_start = start[right_job][machine]
+                max_finish = right_start
+            else:
+                max_finish = INF
+
+            if min_start + duration < max_finish:
+                t[machine].insert(job_idx, job)
+                start[job][machine] = min_start
+                finish[job][machine] = min_start + duration
+                machines[job] += 1
+                break
+
+    return t, start, finish
+
+def optimal_schedule_from_t(n, m, L, p, t):
+    rcl = rcl_from(n, m, t)
+    return optimal_schedule_from_rcl(n, m, L, p, rcl)    
+
 def rcl_from(n, m, t):
     rcl = []
     for k in range(m):
