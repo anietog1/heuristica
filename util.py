@@ -134,3 +134,14 @@ def fake_move_right(n, m, L, p, t):
 
     start, finish = schedule_from_t(n, m, L, p, tt)
     return tt, start, finish
+
+def stupid_rcl(n, m):
+    rcl = []
+    for _ in range(m):
+        for j in range(n):
+            rcl.append(j)
+    return rcl
+
+def normalized_rcl(n, m, rcl):
+    t = t_from(n, m, rcl)
+    return rcl_from(n, m, t)
