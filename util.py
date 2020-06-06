@@ -1,3 +1,5 @@
+import copy
+
 INF = (1 << 30)
 
 def lower_bound(n, m, L, p):
@@ -110,3 +112,25 @@ def get_z(n, m, t, finish):
     last_machine = m - 1
     last_job = t[last_machine][n - 1]
     return finish[last_job][last_machine]
+
+def fake_move_left(n, m, L, p, t):
+    return optimal_schedule_from_t(n, m, L, p, t)
+
+def fake_move_right(n, m, L, p, t):
+    pp, tt = copy.deepcopy((p, t))
+
+    for job in range(n):
+        pp[job].reverse()
+
+    for machine in range(m):
+        tt[machine].reverse()
+    tt.reverse()
+
+    tt, _, _ = optimal_schedule_from_t(n, m, L, pp, tt)
+
+    for machine in range(m):
+        tt[machine].reverse()
+    tt.reverse()
+
+    start, finish = schedule_from_t(n, m, L, p, tt)
+    return tt, start, finish
