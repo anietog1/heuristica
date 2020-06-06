@@ -42,7 +42,8 @@ def fsolve(n, m, L, p, iters=100, swapratio=0.1):
 
         if z <= bestz:
             bestt, beststart, bestfinish, bestz = t, start, finish, z
-        else:
+
+        if z >= bestz:
             level = (level + 1) % 3
 
     return bestt, beststart, bestfinish
