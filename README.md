@@ -5,7 +5,6 @@ Repositorio para el curso de heurística :D
 
 Los métodos funcionan igual:
 
-    $ export PYTHONPATH=$PYTHONPATH:/path/to/lib # poner aqui el path a la carpeta lib
     $ ./metodo.py < inputFile > outputFile
 
 O simplemente ejecutar:
