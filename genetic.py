@@ -9,7 +9,7 @@ import rw, localsearch
 def fsolve(n, m, L, p, population_size=10, children_size=10, generations=100,
            max_cross=2,
            mutation_prob=0.5, mutation_factor=0.2,
-           improvement_prob=0.2, iters=30, swapratio=0.1, level_limit=3):
+           improvement_prob=0.2, iters=10, swapratio=0.1, level_limit=3):
     fcompare = lambda x: (lambda t, z: z) (*x)
 
     P = []
