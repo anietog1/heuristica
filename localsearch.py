@@ -1,6 +1,8 @@
 import util, copy, random
 
-def vnd3levels(n, m, L, p, t, iters=10, swapratio=0.1):
+def vnd3levels(n, m, L, p, t, iters=10, swapratio=0.1, level_limit=3):
+    level_limit = min(level_limit, 3)
+
     bestt = t
     beststart, bestfinish = util.schedule_from_t(n, m, L, p, bestt)
     bestz = util.get_z(n, m, bestt, bestfinish)
@@ -34,6 +36,6 @@ def vnd3levels(n, m, L, p, t, iters=10, swapratio=0.1):
             bestt, beststart, bestfinish, bestz = t, start, finish, z
 
         if z >= bestz:
-            level = (level + 1) % 3
+            level = (level + 1) % level_limit
 
     return bestt
