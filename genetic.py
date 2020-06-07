@@ -14,17 +14,12 @@ def fsolve(n, m, L, p, population_size=10, children_size=10, generations=100,
 
     P = []
 
-    for _ in range(population_size - 1):
+    for _ in range(population_size):
         rcl = util.stupid_rcl(n, m)
         random.shuffle(rcl)
         t, _, finish = util.optimal_schedule_from_rcl(n, m, L, p, rcl)
         z = util.get_z(n, m, t, finish)
         P.append((t, z))
-
-    neh_rcl = constructivos.neh(n, m, L, p)
-    t, _, finish = util.optimal_schedule_from_rcl(n, m, L, p, neh_rcl)
-    z = util.get_z(n, m, t, finish)
-    P.append((t, z))
 
     P.sort(key=fcompare)
 
