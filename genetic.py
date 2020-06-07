@@ -5,15 +5,18 @@ import random
 import copy
 import constructivos
 import rw, localsearch
+import time
 
 def fsolve(n, m, L, p, population_size=10, children_size=10, generations=100,
            max_cross=2,
            mutation_prob=0.5, mutation_factor=0.2,
-           improvement_prob=0.2, iters=10, swapratio=0.1, level_limit=3):
+           improvement_prob=0.2, iters=10, swapratio=0.1, level_limit=3,
+           time_limit=1800):
     fcompare = lambda x: (lambda t, z: z) (*x)
 
     P = []
 
+    beginning = time.time()
     for _ in range(population_size):
         rcl = util.stupid_rcl(n, m)
         random.shuffle(rcl)
@@ -89,6 +92,9 @@ def fsolve(n, m, L, p, population_size=10, children_size=10, generations=100,
             thezs.update({curz})
 
         P.sort(key=fcompare)
+
+        if time.time() - beginning > time_limit:
+            break
 
     t, _ = P[0]
     start, finish = util.schedule_from_t(n, m, L, p, t)
