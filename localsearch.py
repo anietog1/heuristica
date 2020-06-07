@@ -36,4 +36,4 @@ def vnd3levels(n, m, L, p, t, iters=10, swapratio=0.1):
         if z >= bestz:
             level = (level + 1) % 3
 
-    return bestt, beststart, bestfinish
+    return bestt
