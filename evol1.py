@@ -6,10 +6,10 @@ import copy
 import constructivos
 import rw, localsearch
 
-def fsolve(n, m, L, p, population_size=10, children_size=20, generations=100,
+def fsolve(n, m, L, p, population_size=10, children_size=10, generations=100,
            max_cross=2,
-           mutation_prob=0.05, mutation_factor=0.1,
-           improvement_prob=0.1, iters=20, swapratio=0.1):
+           mutation_prob=0.5, mutation_factor=0.2,
+           improvement_prob=0.2, iters=30, swapratio=0.1, level_limit=3):
     fcompare = lambda x: (lambda t, z: z) (*x)
 
     P = []
@@ -69,13 +69,31 @@ def fsolve(n, m, L, p, population_size=10, children_size=20, generations=100,
                 mutate(n, m, kid, mutation_factor)
 
             if random.random() < improvement_prob:
-                improve(n, m, L, p, kid, iters)
+                improve(n, m, L, p, kid, iters, swapratio, level_limit)
 
+            kid, start, finish = util.optimal_schedule_from_t(n, m, L, p, kid)
+            zkid = util.get_z(n, m, kid, finish)
             children.append((kid, zkid))
 
         P.extend(children)
         P.sort(key=fcompare)
         del P[population_size:]
+
+        _, bestz = P[0]
+        thezs = {bestz}
+
+        for i in range(1, population_size):
+            curt, curz = P[i]
+
+            while curz in thezs:
+                mutate(n, m, curt, mutation_factor)
+                curt, start, finish = util.optimal_schedule_from_t(n, m, L, p, curt)
+                curz = util.get_z(n, m, curt, finish)
+
+            P[i] = (curt, curz)
+            thezs.update({curz})
+
+        P.sort(key=fcompare)
 
     t, _ = P[0]
     start, finish = util.schedule_from_t(n, m, L, p, t)
@@ -98,12 +116,12 @@ def cross(n, m, p1, p2, max_cross=3):
 
     return c1, c2
 
-def improve(n, m, L, p, t, iters=10, swapratio=0.1):
-    bestt = localsearch.vnd3levels(n, m, L, p, t, iters, swapratio)
+def improve(n, m, L, p, t, iters, swapratio, level_limit):
+    bestt = localsearch.vnd3levels(n, m, L, p, t, iters, swapratio, level_limit)
     for machine in range(m):
         t[machine] = bestt[machine]
 
-def mutate(n, m, t, mutation_factor=0.1):
+def mutate(n, m, t, mutation_factor):
     nmutations = int(mutation_factor * n * m)
     for _ in range(nmutations):
         machine = random.randint(0, m - 1)
